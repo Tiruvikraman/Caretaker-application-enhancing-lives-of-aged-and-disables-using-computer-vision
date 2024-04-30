@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combined Dashboard</title>
+    <link rel="stylesheet" href="static\styles.css">
+    <!-- Add any additional CSS or libraries here -->
+    <style>
+        /* Add your CSS styles here */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Caretaker Dashboard</h1>
+        <div class="dashboard">
+            <div class="section">
+                <h2>Patients Monitoring</h2>
+                <!-- Add a person's name and phone number here -->
+                <div class="profile">
+                    <h3>Shree pranav</h3>
+                    <p>Phone: 9234568275</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Reports and Logs</h2>
+                <div class="report">
+                    <h3>Medication Report</h3>
+                    <table>
+                        <tr>
+                            <th>Date</th>
+                            <th>Medication Name</th>
+                            <th>Dosage</th>
+                            <th>Session</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr>
+                            <td>2024-04-26</td>
+                            <td>Aspirin</td>
+                            <td>1 tablet</td>
+                            <td>Morning</td>
+                            <td>Completed</td>
+                        </tr>
+                        <tr>
+                            <td>2024-04-27</td>
+                            <td>Rosuvas</td>
+                            <td>2 tablets</td>
+                            <td>Afternoon</td>
+                            <td>Pending</td>
+                        </tr>
+                        <!-- Add more medication entries as needed -->
+                    </table>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Object Detection</h2>
+                <!-- Video element to display the video feed -->
+                <video id="videoFeed" width="10" height="10" controls autoplay></video>
+
+                <!-- Audio element for collision/fall alert -->
+                <audio id="alertAudio" src="static/alert_sound.mp3"></audio>
+
+                <!-- Script to handle SSE for alert notifications -->
+                <script>
+                    const video = document.getElementById('videoFeed');
+                    const audio = document.getElementById('alertAudio');
+
+                    // Event listener for receiving alert messages
+                    const eventSource = new EventSource('/alert_feed');
+                    eventSource.onmessage = function(event) {
+                        // Display alert message
+                        alert("Alert! Collision or Fall detected!!!");
+                        // Play alert sound
+                        playAlertSound();
+                    };
+
+                    // Function to play the alert sound
+                    function playAlertSound() {
+                        // Unmute audio
+                        audio.muted = false;
+                        // Play audio
+                        audio.play().then(() => {
+                            console.log('Audio played successfully');
+                        }).catch(error => {
+                            console.error('Error playing audio:', error);
+                        });
+                    }
+
+                    // Function to handle video stream
+                    function handleStream(event) {
+                        video.src = URL.createObjectURL(event.data);
+                    }
+
+                    // Event listener for streaming video frames
+                    eventSource.addEventListener('message', handleStream, false);
+
+                    // Handle errors in SSE connection
+                    eventSource.onerror = function(error) {
+                        console.error('EventSource failed:', error);
+                        eventSource.close();
+                    };
+                </script>
+            </div>
+
+            <div class="section">
+                <h2>Notifications</h2>
+                <div id="notifications">
+                </div>
+            </div>
+            <div class="section">
+                <button>Settings and Preferences</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
