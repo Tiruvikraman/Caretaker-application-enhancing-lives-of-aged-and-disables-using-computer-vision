@@ -5,6 +5,7 @@ from ultralytics import YOLO
 app = Flask(__name__)
 
 # Initialize YOLO models
+
 model1 = YOLO(r'C:\Users\tiruv\Desktop\hack2tech\Yolo\fall.pt')
 model3 = YOLO("yolov8x-worldv2.pt")
 print("hello")
